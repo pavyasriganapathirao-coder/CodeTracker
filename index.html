@@ -1,0 +1,1430 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeTrack – Student Coding Practice Tracker</title>
+    <meta name="description" content="A comprehensive coding practice tracker for college students to log problems, monitor streaks, track platform & topic progress, and view analytics." />
+    <meta property="og:title" content="CodeTrack – Student Coding Practice Tracker" />
+    <meta property="og:description" content="A comprehensive coding practice tracker for college students to log problems, monitor streaks, track platform & topic progress, and view analytics." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Chart.js CDN for standalone browser compatibility -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+    <!-- n8n Chat Widget CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="app" class="app-layout">
+      <!-- SIDEBAR (Desktop) -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="brand">
+            <div class="brand-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-title">CodeTrack</span>
+              <span class="brand-subtitle">Student Tracker</span>
+            </div>
+          </div>
+          <button class="mobile-close-btn" id="mobile-sidebar-close" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Quick Primary Action -->
+        <div class="sidebar-cta">
+          <button class="btn btn-primary btn-block" id="btn-sidebar-add-problem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>+ Add Problem</span>
+          </button>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="sidebar-nav" id="sidebar-nav">
+          <a href="#dashboard" class="nav-item active" data-view="dashboard">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="9"></rect>
+              <rect x="14" y="3" width="7" height="5"></rect>
+              <rect x="14" y="12" width="7" height="9"></rect>
+              <rect x="3" y="16" width="7" height="5"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="#add-problem" class="nav-item" data-view="add-problem" id="nav-add-problem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            <span>Add Problem</span>
+          </a>
+          <a href="#tracker" class="nav-item" data-view="tracker">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            <span>Problem Tracker</span>
+          </a>
+          <a href="#topics" class="nav-item" data-view="topics">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Topics</span>
+          </a>
+          <a href="#platforms" class="nav-item" data-view="platforms">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span>Platforms</span>
+          </a>
+          <a href="#daily" class="nav-item" data-view="daily">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Daily Practice</span>
+          </a>
+          <a href="#analytics" class="nav-item" data-view="analytics">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Analytics</span>
+          </a>
+          <a href="#goals" class="nav-item" data-view="goals">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+            <span>Goals</span>
+          </a>
+          <a href="#settings" class="nav-item" data-view="settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Settings</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-item nav-ai-item" id="nav-ai-mentor" title="Open n8n AI Chatbot">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path>
+              <rect x="4" y="8" width="16" height="12" rx="2"></rect>
+              <circle cx="9" cy="13" r="1"></circle>
+              <circle cx="15" cy="13" r="1"></circle>
+              <line x1="9" y1="17" x2="15" y2="17"></line>
+            </svg>
+            <span>AI Practice Mentor</span>
+          </a>
+        </nav>
+
+        <!-- Sidebar Footer / Student Profile Summary -->
+        <div class="sidebar-footer">
+          <div class="user-card">
+            <div class="user-avatar" id="sidebar-user-avatar">CS</div>
+            <div class="user-info">
+              <span class="user-name" id="sidebar-student-name">Student</span>
+              <span class="user-streak" id="sidebar-streak-text">🔥 0-day streak</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- BACKDROP for Mobile Drawer -->
+      <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+      <!-- MAIN CONTENT WRAPPER -->
+      <div class="main-wrapper">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+          <div class="header-left">
+            <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open navigation menu">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+            <div class="page-title-box">
+              <h1 class="page-title" id="page-title">Dashboard</h1>
+              <span class="header-date" id="header-today-date"></span>
+            </div>
+          </div>
+
+          <div class="header-right">
+            <!-- Streak pill -->
+            <div class="streak-pill" id="header-streak-pill" title="Current Practice Streak">
+              <span class="streak-icon">🔥</span>
+              <span class="streak-count" id="header-streak-count">0</span>
+              <span class="streak-label">days</span>
+            </div>
+
+            <!-- Theme Toggle -->
+            <button class="icon-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+              <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </button>
+
+            <!-- n8n Chatbot Trigger Button -->
+            <button class="btn btn-outline btn-sm" id="btn-open-ai-chat" title="Chat with n8n AI Practice Assistant" aria-label="Open AI Mentor">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path>
+                <rect x="4" y="8" width="16" height="12" rx="2"></rect>
+                <circle cx="9" cy="13" r="1"></circle>
+                <circle cx="15" cy="13" r="1"></circle>
+                <line x1="9" y1="17" x2="15" y2="17"></line>
+              </svg>
+              <span>AI Mentor</span>
+            </button>
+
+            <!-- Header Quick Add Button -->
+            <button class="btn btn-primary btn-sm" id="btn-header-add-problem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>+ Add Problem</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- VIEW CONTAINERS -->
+        <main class="content-container">
+
+          <!-- 1. DASHBOARD VIEW -->
+          <section class="view-section active" id="view-dashboard">
+            <!-- Top Hero Stats -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Total Problems</span>
+                  <div class="stat-icon-wrapper blue">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="16 18 22 12 16 6"></polyline>
+                      <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="stat-value tabular-nums" id="dash-total-problems">0</div>
+                <div class="stat-meta">Recorded across all platforms</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Solved</span>
+                  <div class="stat-icon-wrapper green">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="stat-value text-green tabular-nums" id="dash-solved-problems">0</div>
+                <div class="stat-meta" id="dash-solved-percentage">0% of total solved</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Attempted</span>
+                  <div class="stat-icon-wrapper amber">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="stat-value text-amber tabular-nums" id="dash-attempted-problems">0</div>
+                <div class="stat-meta">Work in progress</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Unsolved</span>
+                  <div class="stat-icon-wrapper red">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="15" y1="9" x2="9" y2="15"></line>
+                      <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                  </div>
+                </div>
+                <div class="stat-value text-red tabular-nums" id="dash-unsolved-problems">0</div>
+                <div class="stat-meta">Saved for later</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Current Streak</span>
+                  <div class="stat-icon-wrapper orange">
+                    <span>🔥</span>
+                  </div>
+                </div>
+                <div class="stat-value text-orange tabular-nums" id="dash-current-streak">0</div>
+                <div class="stat-meta" id="dash-longest-streak-meta">Best: 0 days</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Practice Days</span>
+                  <div class="stat-icon-wrapper purple">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </div>
+                </div>
+                <div class="stat-value tabular-nums" id="dash-practice-days">0</div>
+                <div class="stat-meta">Unique active days</div>
+              </div>
+
+              <div class="stat-card stat-card-wide">
+                <div class="stat-header">
+                  <span class="stat-label">Overall Progress</span>
+                  <span class="stat-badge tabular-nums" id="dash-overall-percent-badge">0%</span>
+                </div>
+                <div class="progress-bar-container mt-2">
+                  <div class="progress-bar-fill bg-blue" id="dash-overall-progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="stat-meta flex-between mt-2">
+                  <span id="dash-overall-solved-text">0 / 0 Solved</span>
+                  <span id="dash-daily-today-mini">Today: 0 solved</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- DIFFICULTY PROGRESS & WEEKLY CHART -->
+            <div class="grid-2-col">
+              <!-- Difficulty Progress Card -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <h2 class="card-title">Difficulty Breakdown</h2>
+                    <p class="card-subtitle">Distribution of solved and logged problems</p>
+                  </div>
+                </div>
+                <div class="difficulty-stack" id="dash-difficulty-list">
+                  <!-- Easy -->
+                  <div class="difficulty-item">
+                    <div class="diff-header">
+                      <span class="diff-name diff-easy">Easy</span>
+                      <span class="diff-count tabular-nums" id="dash-easy-count">0</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill bg-diff-easy" id="dash-easy-bar" style="width: 0%"></div>
+                    </div>
+                  </div>
+                  <!-- Medium -->
+                  <div class="difficulty-item">
+                    <div class="diff-header">
+                      <span class="diff-name diff-medium">Medium</span>
+                      <span class="diff-count tabular-nums" id="dash-medium-count">0</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill bg-diff-medium" id="dash-medium-bar" style="width: 0%"></div>
+                    </div>
+                  </div>
+                  <!-- Hard -->
+                  <div class="difficulty-item">
+                    <div class="diff-header">
+                      <span class="diff-name diff-hard">Hard</span>
+                      <span class="diff-count tabular-nums" id="dash-hard-count">0</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill bg-diff-hard" id="dash-hard-bar" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Weekly Practice Chart Card -->
+              <div class="card">
+                <div class="card-header flex-between">
+                  <div class="card-title-group">
+                    <h2 class="card-title">Weekly Practice</h2>
+                    <p class="card-subtitle">Problems solved Monday to Sunday this week</p>
+                  </div>
+                  <span class="text-xs text-muted" id="weekly-chart-total">0 this week</span>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="weeklyPracticeChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- PLATFORM PROGRESS SECTION -->
+            <div class="card">
+              <div class="card-header flex-between">
+                <div class="card-title-group">
+                  <h2 class="card-title">Platform Progress</h2>
+                  <p class="card-subtitle">Problems solved vs your personal targets</p>
+                </div>
+                <button class="btn btn-outline btn-sm" id="btn-edit-platform-targets">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  <span>Edit Targets</span>
+                </button>
+              </div>
+              <div class="platform-grid" id="dash-platform-grid">
+                <!-- Dynamically populated by renderDashboard() -->
+              </div>
+            </div>
+
+            <!-- RECENT PROBLEMS SECTION -->
+            <div class="card">
+              <div class="card-header flex-between">
+                <div class="card-title-group">
+                  <h2 class="card-title">Recent Problems</h2>
+                  <p class="card-subtitle">Latest coding challenges added to your tracker</p>
+                </div>
+                <div class="card-actions">
+                  <a href="#tracker" class="btn btn-outline btn-sm" data-view="tracker">View All Problems</a>
+                  <button class="btn btn-primary btn-sm btn-dash-add-problem">+ Add Problem</button>
+                </div>
+              </div>
+
+              <!-- Table wrapper -->
+              <div class="table-container" id="dash-recent-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Problem Name</th>
+                      <th>Platform</th>
+                      <th>Topic</th>
+                      <th>Difficulty</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Link</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dash-recent-tbody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Empty state if no problems -->
+              <div class="empty-state hidden" id="dash-empty-state">
+                <div class="empty-icon">📝</div>
+                <h3 class="empty-title">No coding problems added yet</h3>
+                <p class="empty-desc">Start logging your practice sessions to unlock streaks, statistics, and analytics.</p>
+                <button class="btn btn-primary btn-empty-add-problem">+ Add Your First Problem</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. ADD / EDIT PROBLEM VIEW (Page View option) -->
+          <section class="view-section" id="view-add-problem">
+            <div class="card max-w-form">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h2 class="card-title" id="page-form-title">Add Coding Problem</h2>
+                  <p class="card-subtitle">Log a new coding challenge into your practice history</p>
+                </div>
+              </div>
+              <form id="standalone-problem-form" class="problem-form">
+                <!-- Shared form fields container -->
+                <div class="form-grid">
+                  <!-- Problem Name -->
+                  <div class="form-group full-width">
+                    <label for="form-problem-name" class="form-label required">Problem Name</label>
+                    <input type="text" id="form-problem-name" class="form-input" placeholder="e.g. Two Sum, Reverse Linked List" required />
+                    <span class="form-error" id="error-problem-name"></span>
+                  </div>
+
+                  <!-- Platform -->
+                  <div class="form-group">
+                    <label for="form-platform" class="form-label required">Platform</label>
+                    <select id="form-platform" class="form-select" required>
+                      <option value="LeetCode">LeetCode</option>
+                      <option value="HackerRank">HackerRank</option>
+                      <option value="CodeChef">CodeChef</option>
+                      <option value="GeeksforGeeks">GeeksforGeeks</option>
+                      <option value="Codeforces">Codeforces</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <!-- Difficulty -->
+                  <div class="form-group">
+                    <label for="form-difficulty" class="form-label required">Difficulty</label>
+                    <select id="form-difficulty" class="form-select" required>
+                      <option value="Easy">Easy</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Hard">Hard</option>
+                    </select>
+                  </div>
+
+                  <!-- Topic -->
+                  <div class="form-group">
+                    <label for="form-topic" class="form-label required">Topic</label>
+                    <select id="form-topic" class="form-select" required>
+                      <option value="Arrays">Arrays</option>
+                      <option value="Strings">Strings</option>
+                      <option value="Linked List">Linked List</option>
+                      <option value="Stack">Stack</option>
+                      <option value="Queue">Queue</option>
+                      <option value="Trees">Trees</option>
+                      <option value="Graphs">Graphs</option>
+                      <option value="Recursion">Recursion</option>
+                      <option value="Sorting">Sorting</option>
+                      <option value="Searching">Searching</option>
+                      <option value="Dynamic Programming">Dynamic Programming</option>
+                      <option value="Greedy">Greedy</option>
+                      <option value="Hashing">Hashing</option>
+                      <option value="Mathematics">Mathematics</option>
+                      <option value="SQL">SQL</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <!-- Status -->
+                  <div class="form-group">
+                    <label for="form-status" class="form-label required">Status</label>
+                    <select id="form-status" class="form-select" required>
+                      <option value="Solved">Solved</option>
+                      <option value="Attempted">Attempted</option>
+                      <option value="Unsolved">Unsolved</option>
+                    </select>
+                  </div>
+
+                  <!-- Date Solved -->
+                  <div class="form-group">
+                    <label for="form-date" class="form-label required">Date</label>
+                    <input type="date" id="form-date" class="form-input" required />
+                  </div>
+
+                  <!-- Time Taken -->
+                  <div class="form-group">
+                    <label for="form-time" class="form-label">Time Taken (minutes)</label>
+                    <input type="number" id="form-time" class="form-input" placeholder="e.g. 25" min="0" />
+                    <span class="form-error" id="error-time-taken"></span>
+                  </div>
+
+                  <!-- Problem Link -->
+                  <div class="form-group full-width">
+                    <label for="form-link" class="form-label">Problem URL</label>
+                    <input type="url" id="form-link" class="form-input" placeholder="https://leetcode.com/problems/two-sum/" />
+                    <span class="form-error" id="error-problem-link"></span>
+                  </div>
+
+                  <!-- Notes -->
+                  <div class="form-group full-width">
+                    <label for="form-notes" class="form-label">Notes / Approach</label>
+                    <textarea id="form-notes" class="form-textarea" rows="3" placeholder="Key data structures used, edge cases handled, time complexity, etc."></textarea>
+                  </div>
+                </div>
+
+                <div class="form-actions mt-4">
+                  <button type="submit" class="btn btn-primary" id="btn-save-problem">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                      <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                      <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    <span id="btn-save-problem-text">Save Problem</span>
+                  </button>
+                  <button type="button" class="btn btn-outline" id="btn-reset-problem-form">Clear Form</button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- 3. PROBLEM TRACKER VIEW -->
+          <section class="view-section" id="view-tracker">
+            <div class="card">
+              <!-- Header & Actions -->
+              <div class="card-header flex-between flex-wrap gap-3">
+                <div class="card-title-group">
+                  <h2 class="card-title">Problem Tracker</h2>
+                  <p class="card-subtitle" id="tracker-count-subtitle">Search, filter, and manage your problems</p>
+                </div>
+                <div class="header-actions">
+                  <button class="btn btn-primary" id="btn-tracker-add-problem">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>+ Add Problem</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filter & Search Controls Toolbar -->
+              <div class="tracker-toolbar">
+                <!-- Search Box -->
+                <div class="search-box">
+                  <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input type="text" id="tracker-search-input" class="search-input" placeholder="Search by name, platform, topic, or notes..." />
+                  <button class="clear-search-btn hidden" id="tracker-clear-search" aria-label="Clear search">✕</button>
+                </div>
+
+                <!-- Filters Grid -->
+                <div class="filters-row">
+                  <!-- Platform Filter -->
+                  <div class="filter-item">
+                    <label class="filter-label">Platform</label>
+                    <select id="filter-platform" class="filter-select">
+                      <option value="ALL">All Platforms</option>
+                      <option value="LeetCode">LeetCode</option>
+                      <option value="HackerRank">HackerRank</option>
+                      <option value="CodeChef">CodeChef</option>
+                      <option value="GeeksforGeeks">GeeksforGeeks</option>
+                      <option value="Codeforces">Codeforces</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <!-- Difficulty Filter -->
+                  <div class="filter-item">
+                    <label class="filter-label">Difficulty</label>
+                    <select id="filter-difficulty" class="filter-select">
+                      <option value="ALL">All Difficulties</option>
+                      <option value="Easy">Easy</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Hard">Hard</option>
+                    </select>
+                  </div>
+
+                  <!-- Topic Filter -->
+                  <div class="filter-item">
+                    <label class="filter-label">Topic</label>
+                    <select id="filter-topic" class="filter-select">
+                      <option value="ALL">All Topics</option>
+                      <option value="Arrays">Arrays</option>
+                      <option value="Strings">Strings</option>
+                      <option value="Linked List">Linked List</option>
+                      <option value="Stack">Stack</option>
+                      <option value="Queue">Queue</option>
+                      <option value="Trees">Trees</option>
+                      <option value="Graphs">Graphs</option>
+                      <option value="Recursion">Recursion</option>
+                      <option value="Sorting">Sorting</option>
+                      <option value="Searching">Searching</option>
+                      <option value="Dynamic Programming">Dynamic Programming</option>
+                      <option value="Greedy">Greedy</option>
+                      <option value="Hashing">Hashing</option>
+                      <option value="Mathematics">Mathematics</option>
+                      <option value="SQL">SQL</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <!-- Status Filter -->
+                  <div class="filter-item">
+                    <label class="filter-label">Status</label>
+                    <select id="filter-status" class="filter-select">
+                      <option value="ALL">All Statuses</option>
+                      <option value="Solved">Solved</option>
+                      <option value="Attempted">Attempted</option>
+                      <option value="Unsolved">Unsolved</option>
+                    </select>
+                  </div>
+
+                  <!-- Date Filter -->
+                  <div class="filter-item">
+                    <label class="filter-label">Date</label>
+                    <select id="filter-date" class="filter-select">
+                      <option value="ALL">All Time</option>
+                      <option value="TODAY">Today</option>
+                      <option value="THIS_WEEK">This Week</option>
+                      <option value="THIS_MONTH">This Month</option>
+                    </select>
+                  </div>
+
+                  <!-- Sort By -->
+                  <div class="filter-item">
+                    <label class="filter-label">Sort By</label>
+                    <select id="filter-sort" class="filter-select">
+                      <option value="newest">Newest First</option>
+                      <option value="oldest">Oldest First</option>
+                      <option value="easy-hard">Easy → Hard</option>
+                      <option value="hard-easy">Hard → Easy</option>
+                      <option value="highest-time">Highest Time</option>
+                      <option value="lowest-time">Lowest Time</option>
+                    </select>
+                  </div>
+
+                  <!-- Reset Filters Button -->
+                  <div class="filter-item filter-reset-item">
+                    <button class="btn btn-outline btn-sm" id="btn-reset-filters" title="Reset all filters">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <path d="M3 3v5h5"></path>
+                      </svg>
+                      <span>Reset</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Results Meta Bar -->
+              <div class="results-meta-bar">
+                <span id="tracker-results-count" class="text-xs text-muted">Showing 0 problems</span>
+              </div>
+
+              <!-- Table View -->
+              <div class="table-container" id="tracker-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Problem Name</th>
+                      <th>Platform</th>
+                      <th>Topic</th>
+                      <th>Difficulty</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Link</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tracker-tbody">
+                    <!-- Populated by renderProblems() -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Mobile Card View (shown automatically via CSS media query) -->
+              <div class="mobile-cards-list" id="tracker-mobile-list">
+                <!-- Populated by renderProblems() -->
+              </div>
+
+              <!-- Empty State -->
+              <div class="empty-state hidden" id="tracker-empty-state">
+                <div class="empty-icon">🔍</div>
+                <h3 class="empty-title">No matching problems found</h3>
+                <p class="empty-desc">Try clearing your filters or search terms, or add a new problem.</p>
+                <div class="empty-actions mt-3">
+                  <button class="btn btn-outline" id="btn-empty-reset-filters">Reset Filters</button>
+                  <button class="btn btn-primary btn-empty-add-problem">+ Add Problem</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. TOPICS VIEW -->
+          <section class="view-section" id="view-topics">
+            <div class="card">
+              <div class="card-header flex-between flex-wrap gap-2">
+                <div class="card-title-group">
+                  <h2 class="card-title">Topic-wise Mastery</h2>
+                  <p class="card-subtitle">Track your problem solving depth across key computer science domains</p>
+                </div>
+                <button class="btn btn-primary btn-sm btn-topics-add-problem">+ Add Problem</button>
+              </div>
+              <div class="topics-grid" id="topics-grid">
+                <!-- Populated dynamically by renderTopics() -->
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. PLATFORMS VIEW -->
+          <section class="view-section" id="view-platforms">
+            <div class="card">
+              <div class="card-header flex-between flex-wrap gap-2">
+                <div class="card-title-group">
+                  <h2 class="card-title">Coding Platforms</h2>
+                  <p class="card-subtitle">Manage your targets and monitor progress on each practice site</p>
+                </div>
+                <button class="btn btn-outline btn-sm" id="btn-platforms-edit-targets">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  <span>Edit Platform Targets</span>
+                </button>
+              </div>
+              <div class="platforms-page-grid" id="platforms-page-grid">
+                <!-- Populated dynamically by renderPlatforms() -->
+              </div>
+            </div>
+          </section>
+
+          <!-- 6. DAILY PRACTICE VIEW -->
+          <section class="view-section" id="view-daily">
+            <!-- Daily Goal Hero Card -->
+            <div class="card daily-hero-card">
+              <div class="daily-hero-content">
+                <div class="daily-hero-left">
+                  <span class="badge-label">Today's Target</span>
+                  <h2 class="daily-goal-heading" id="daily-goal-heading">Today's Goal: 5 Problems</h2>
+                  <p class="daily-goal-desc" id="daily-goal-status-text">Complete your daily problems to maintain your practice streak.</p>
+
+                  <div class="daily-goal-stats mt-4">
+                    <div class="daily-stat-chip">
+                      <span class="chip-label">Completed</span>
+                      <span class="chip-val tabular-nums" id="daily-completed-count">0 / 5</span>
+                    </div>
+                    <div class="daily-stat-chip">
+                      <span class="chip-label">Progress</span>
+                      <span class="chip-val tabular-nums" id="daily-percent-text">0%</span>
+                    </div>
+                    <div class="daily-stat-chip">
+                      <span class="chip-label">Streak Status</span>
+                      <span class="chip-val" id="daily-streak-status">Active 🔥</span>
+                    </div>
+                  </div>
+
+                  <div class="progress-bar-container daily-progress-bar-wrap mt-3">
+                    <div class="progress-bar-fill bg-green" id="daily-progress-fill" style="width: 0%"></div>
+                  </div>
+
+                  <!-- Goal Completed Celebratory Banner -->
+                  <div class="goal-completed-banner hidden" id="daily-goal-completed-banner">
+                    <span class="celebration-icon">🎉</span>
+                    <div class="celebration-text">
+                      <strong>Daily goal completed! 🎉</strong>
+                      <span>Incredible work today! You've met your daily practice target.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="daily-hero-actions">
+                  <button class="btn btn-primary" id="btn-daily-add-problem">+ Log Problem Today</button>
+                  <a href="#goals" class="btn btn-outline mt-2" data-view="goals">Change Daily Goal</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Streak & Consistency Metrics -->
+            <div class="grid-3-col mt-4">
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Current Streak</span>
+                  <span class="stat-icon-wrapper orange">🔥</span>
+                </div>
+                <div class="stat-value text-orange tabular-nums" id="daily-current-streak">0 days</div>
+                <div class="stat-meta">Consecutive active practice days</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Longest Streak</span>
+                  <span class="stat-icon-wrapper blue">🏆</span>
+                </div>
+                <div class="stat-value text-blue tabular-nums" id="daily-longest-streak">0 days</div>
+                <div class="stat-meta">All-time personal record</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Total Practice Days</span>
+                  <span class="stat-icon-wrapper purple">📅</span>
+                </div>
+                <div class="stat-value tabular-nums" id="daily-total-days">0 days</div>
+                <div class="stat-meta">Unique days logged in tracker</div>
+              </div>
+            </div>
+
+            <!-- GitHub-Style Practice Activity Calendar -->
+            <div class="card mt-4">
+              <div class="card-header flex-between flex-wrap gap-2">
+                <div class="card-title-group">
+                  <h2 class="card-title">Practice Activity Calendar</h2>
+                  <p class="card-subtitle">GitHub-style activity matrix showing daily problem solving intensity</p>
+                </div>
+                <!-- Intensity Legend -->
+                <div class="calendar-legend">
+                  <span class="legend-text">Less</span>
+                  <span class="legend-cell level-0" title="0 problems"></span>
+                  <span class="legend-cell level-1" title="1 problem"></span>
+                  <span class="legend-cell level-2" title="2-3 problems"></span>
+                  <span class="legend-cell level-3" title="4-5 problems"></span>
+                  <span class="legend-cell level-4" title="6+ problems"></span>
+                  <span class="legend-text">More</span>
+                </div>
+              </div>
+
+              <!-- Calendar Heatmap Grid -->
+              <div class="calendar-scroll-wrap">
+                <div class="calendar-heatmap" id="practice-calendar-heatmap">
+                  <!-- Generated dynamically in script.js -->
+                </div>
+              </div>
+
+              <!-- Selected Date Details Drawer -->
+              <div class="calendar-selected-details" id="calendar-date-details">
+                <span id="calendar-detail-label">Click any date square above to view problems solved on that day.</span>
+              </div>
+            </div>
+
+            <!-- Problems Solved Today List -->
+            <div class="card mt-4">
+              <div class="card-header flex-between">
+                <h2 class="card-title">Problems Solved Today</h2>
+                <span class="text-xs text-muted" id="today-solved-count-label">0 problems</span>
+              </div>
+              <div id="today-problems-container">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </section>
+
+          <!-- 7. ANALYTICS VIEW -->
+          <section class="view-section" id="view-analytics">
+            <div class="analytics-header-row">
+              <div class="card-title-group">
+                <h2 class="card-title">Coding Analytics & Trends</h2>
+                <p class="card-subtitle">Comprehensive breakdown of your problem solving habits</p>
+              </div>
+            </div>
+
+            <!-- Charts 2x2 Grid -->
+            <div class="grid-2-col mt-4">
+              <!-- Platform Distribution -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Problems by Platform</h3>
+                  <p class="card-subtitle">Platform distribution of your practice</p>
+                </div>
+                <div class="chart-wrapper chart-wrapper-doughnut">
+                  <canvas id="platformDistributionChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Difficulty Distribution -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Problems by Difficulty</h3>
+                  <p class="card-subtitle">Ratio of Easy, Medium, and Hard problems</p>
+                </div>
+                <div class="chart-wrapper chart-wrapper-doughnut">
+                  <canvas id="difficultyDistributionChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Topic Distribution -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Top Topics Practiced</h3>
+                  <p class="card-subtitle">Most frequently solved problem categories</p>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="topicDistributionChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Daily Practice Trend -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Daily Problems Solved (Last 14 Days)</h3>
+                  <p class="card-subtitle">Daily practice activity volume</p>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="dailyProblemsChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Weekly Problems -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Weekly Problems (Last 8 Weeks)</h3>
+                  <p class="card-subtitle">Week-over-week consistency</p>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="weeklyProblemsChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Monthly Problems -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Monthly Problems Solved</h3>
+                  <p class="card-subtitle">Month-by-month progress overview</p>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="monthlyProblemsChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 8. GOALS VIEW -->
+          <section class="view-section" id="view-goals">
+            <div class="goals-container">
+              <div class="card">
+                <div class="card-header flex-between flex-wrap gap-2">
+                  <div class="card-title-group">
+                    <h2 class="card-title">Coding Goals & Milestones</h2>
+                    <p class="card-subtitle">Set cadence targets and stay motivated</p>
+                  </div>
+                  <button class="btn btn-outline btn-sm" id="btn-edit-cadence-goals">Update Targets</button>
+                </div>
+
+                <div class="goals-cards-grid mt-4">
+                  <!-- Daily Goal Card -->
+                  <div class="goal-card">
+                    <div class="goal-header">
+                      <div class="goal-icon-badge blue">☀️</div>
+                      <div class="goal-info">
+                        <h3 class="goal-name">Daily Goal</h3>
+                        <span class="goal-target-text" id="goal-daily-target-text">Target: 5 Problems / day</span>
+                      </div>
+                    </div>
+                    <div class="goal-metric tabular-nums" id="goal-daily-progress-metric">0 / 5</div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill bg-blue" id="goal-daily-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="goal-motivation" id="goal-daily-motivation">Start your first problem today!</div>
+                  </div>
+
+                  <!-- Weekly Goal Card -->
+                  <div class="goal-card">
+                    <div class="goal-header">
+                      <div class="goal-icon-badge purple">📅</div>
+                      <div class="goal-info">
+                        <h3 class="goal-name">Weekly Goal</h3>
+                        <span class="goal-target-text" id="goal-weekly-target-text">Target: 25 Problems / week</span>
+                      </div>
+                    </div>
+                    <div class="goal-metric tabular-nums" id="goal-weekly-progress-metric">0 / 25</div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill bg-purple" id="goal-weekly-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="goal-motivation" id="goal-weekly-motivation">Every week counts towards mastery.</div>
+                  </div>
+
+                  <!-- Monthly Goal Card -->
+                  <div class="goal-card">
+                    <div class="goal-header">
+                      <div class="goal-icon-badge green">🚀</div>
+                      <div class="goal-info">
+                        <h3 class="goal-name">Monthly Goal</h3>
+                        <span class="goal-target-text" id="goal-monthly-target-text">Target: 80 Problems / month</span>
+                      </div>
+                    </div>
+                    <div class="goal-metric tabular-nums" id="goal-monthly-progress-metric">0 / 80</div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill bg-green" id="goal-monthly-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="goal-motivation" id="goal-monthly-motivation">You're making steady progress this month.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Platform Goals Summary -->
+              <div class="card mt-4">
+                <div class="card-header flex-between">
+                  <h3 class="card-title">Platform Targets</h3>
+                  <a href="#platforms" class="btn btn-outline btn-sm" data-view="platforms">Manage Platforms</a>
+                </div>
+                <div class="platform-goals-list" id="goals-platform-list">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 9. SETTINGS VIEW -->
+          <section class="view-section" id="view-settings">
+            <div class="card max-w-form">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h2 class="card-title">Settings & Preferences</h2>
+                  <p class="card-subtitle">Customize student profile, coding targets, and manage your data</p>
+                </div>
+              </div>
+
+              <form id="settings-form" class="settings-form">
+                <div class="settings-section">
+                  <h3 class="settings-section-title">Student Profile</h3>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="settings-student-name" class="form-label">Student Name</label>
+                      <input type="text" id="settings-student-name" class="form-input" placeholder="e.g. Alex Chen" />
+                    </div>
+                    <div class="form-group">
+                      <label for="settings-preferred-platform" class="form-label">Preferred Platform</label>
+                      <select id="settings-preferred-platform" class="form-select">
+                        <option value="LeetCode">LeetCode</option>
+                        <option value="HackerRank">HackerRank</option>
+                        <option value="CodeChef">CodeChef</option>
+                        <option value="GeeksforGeeks">GeeksforGeeks</option>
+                        <option value="Codeforces">Codeforces</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="settings-section">
+                  <h3 class="settings-section-title">Cadence Practice Targets</h3>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="settings-daily-goal" class="form-label">Daily Goal (problems/day)</label>
+                      <input type="number" id="settings-daily-goal" class="form-input" min="1" max="100" />
+                    </div>
+                    <div class="form-group">
+                      <label for="settings-weekly-goal" class="form-label">Weekly Goal (problems/week)</label>
+                      <input type="number" id="settings-weekly-goal" class="form-input" min="1" max="500" />
+                    </div>
+                    <div class="form-group">
+                      <label for="settings-monthly-goal" class="form-label">Monthly Goal (problems/month)</label>
+                      <input type="number" id="settings-monthly-goal" class="form-input" min="1" max="2000" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="settings-section">
+                  <h3 class="settings-section-title">Appearance & Theme</h3>
+                  <div class="theme-options-grid">
+                    <label class="theme-radio-card">
+                      <input type="radio" name="settings-theme" value="dark" checked />
+                      <div class="theme-card-content">
+                        <span class="theme-preview dark-preview"></span>
+                        <span class="theme-title">Dark Mode</span>
+                        <span class="theme-desc">High contrast developer theme</span>
+                      </div>
+                    </label>
+                    <label class="theme-radio-card">
+                      <input type="radio" name="settings-theme" value="light" />
+                      <div class="theme-card-content">
+                        <span class="theme-preview light-preview"></span>
+                        <span class="theme-title">Light Mode</span>
+                        <span class="theme-desc">Clean daylight interface</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-actions mt-4">
+                  <button type="submit" class="btn btn-primary" id="btn-save-settings">Save Settings</button>
+                </div>
+              </form>
+
+              <!-- Data Management (Export / Import / Clear) -->
+              <div class="settings-section mt-5 border-t pt-4">
+                <h3 class="settings-section-title">Data Backup & Migration</h3>
+                <p class="text-xs text-muted mb-3">All your problems and stats are safely stored in your browser's localStorage. You can export a backup or import on another machine.</p>
+
+                <div class="data-actions-row">
+                  <button class="btn btn-outline" id="btn-export-data">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Export Data (JSON)</span>
+                  </button>
+
+                  <label class="btn btn-outline cursor-pointer" for="import-file-input">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Import Data (JSON)</span>
+                    <input type="file" id="import-file-input" accept=".json,application/json" class="hidden" />
+                  </label>
+
+                  <button class="btn btn-danger" id="btn-clear-all-data">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                    <span>Clear All Data</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </main>
+      </div>
+
+      <!-- MOBILE BOTTOM NAVIGATION -->
+      <nav class="mobile-bottom-nav">
+        <a href="#dashboard" class="mobile-nav-item active" data-view="dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#tracker" class="mobile-nav-item" data-view="tracker">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+          <span>Tracker</span>
+        </a>
+        <button class="mobile-nav-add-btn" id="mobile-nav-add-btn" aria-label="Add Problem">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <a href="#daily" class="mobile-nav-item" data-view="daily">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Daily</span>
+        </a>
+        <a href="#analytics" class="mobile-nav-item" data-view="analytics">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Analytics</span>
+        </a>
+      </nav>
+
+      <!-- UNIVERSAL ADD/EDIT PROBLEM MODAL (Section 9 & 10 requirement) -->
+      <div class="modal-overlay hidden" id="problem-modal" role="dialog" aria-modal="true" aria-labelledby="modal-problem-title">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title-box">
+              <h3 class="modal-title" id="modal-problem-title">Add Problem</h3>
+              <p class="modal-subtitle" id="modal-problem-subtitle">Enter details to record this practice problem</p>
+            </div>
+            <button class="modal-close-btn" id="modal-problem-close" aria-label="Close dialog">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <form id="modal-problem-form" class="problem-form">
+            <input type="hidden" id="modal-edit-id" value="" />
+
+            <div class="form-grid">
+              <!-- Problem Name -->
+              <div class="form-group full-width">
+                <label for="modal-problem-name" class="form-label required">Problem Name</label>
+                <input type="text" id="modal-problem-name" class="form-input" placeholder="e.g. Two Sum, Valid Parentheses" required />
+                <span class="form-error" id="modal-error-name"></span>
+              </div>
+
+              <!-- Platform -->
+              <div class="form-group">
+                <label for="modal-platform" class="form-label required">Platform</label>
+                <select id="modal-platform" class="form-select" required>
+                  <option value="LeetCode">LeetCode</option>
+                  <option value="HackerRank">HackerRank</option>
+                  <option value="CodeChef">CodeChef</option>
+                  <option value="GeeksforGeeks">GeeksforGeeks</option>
+                  <option value="Codeforces">Codeforces</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <!-- Difficulty -->
+              <div class="form-group">
+                <label for="modal-difficulty" class="form-label required">Difficulty</label>
+                <select id="modal-difficulty" class="form-select" required>
+                  <option value="Easy">Easy</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+              </div>
+
+              <!-- Topic -->
+              <div class="form-group">
+                <label for="modal-topic" class="form-label required">Topic</label>
+                <select id="modal-topic" class="form-select" required>
+                  <option value="Arrays">Arrays</option>
+                  <option value="Strings">Strings</option>
+                  <option value="Linked List">Linked List</option>
+                  <option value="Stack">Stack</option>
+                  <option value="Queue">Queue</option>
+                  <option value="Trees">Trees</option>
+                  <option value="Graphs">Graphs</option>
+                  <option value="Recursion">Recursion</option>
+                  <option value="Sorting">Sorting</option>
+                  <option value="Searching">Searching</option>
+                  <option value="Dynamic Programming">Dynamic Programming</option>
+                  <option value="Greedy">Greedy</option>
+                  <option value="Hashing">Hashing</option>
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="SQL">SQL</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <!-- Status -->
+              <div class="form-group">
+                <label for="modal-status" class="form-label required">Status</label>
+                <select id="modal-status" class="form-select" required>
+                  <option value="Solved">Solved</option>
+                  <option value="Attempted">Attempted</option>
+                  <option value="Unsolved">Unsolved</option>
+                </select>
+              </div>
+
+              <!-- Date -->
+              <div class="form-group">
+                <label for="modal-date" class="form-label required">Date</label>
+                <input type="date" id="modal-date" class="form-input" required />
+              </div>
+
+              <!-- Time Taken -->
+              <div class="form-group">
+                <label for="modal-time" class="form-label">Time Taken (min)</label>
+                <input type="number" id="modal-time" class="form-input" placeholder="e.g. 20" min="0" />
+                <span class="form-error" id="modal-error-time"></span>
+              </div>
+
+              <!-- Problem Link -->
+              <div class="form-group full-width">
+                <label for="modal-link" class="form-label">Problem URL</label>
+                <input type="url" id="modal-link" class="form-input" placeholder="https://leetcode.com/problems/..." />
+                <span class="form-error" id="modal-error-link"></span>
+              </div>
+
+              <!-- Notes -->
+              <div class="form-group full-width">
+                <label for="modal-notes" class="form-label">Notes</label>
+                <textarea id="modal-notes" class="form-textarea" rows="2" placeholder="Approach notes, complex edge cases, space/time complexity..."></textarea>
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" class="btn btn-outline" id="modal-problem-cancel">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="modal-problem-submit">Save Problem</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- DELETE CONFIRMATION MODAL -->
+      <div class="modal-overlay hidden" id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+        <div class="modal-content modal-content-sm">
+          <div class="modal-header">
+            <h3 class="modal-title text-red" id="delete-modal-title">Confirm Deletion</h3>
+            <button class="modal-close-btn" id="delete-modal-close" aria-label="Close dialog">✕</button>
+          </div>
+          <div class="modal-body">
+            <p id="delete-modal-text">Are you sure you want to delete this problem? This action cannot be undone.</p>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-outline" id="delete-modal-cancel">Cancel</button>
+            <button type="button" class="btn btn-danger" id="delete-modal-confirm">Delete Problem</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDIT PLATFORM TARGETS MODAL -->
+      <div class="modal-overlay hidden" id="target-modal" role="dialog" aria-modal="true" aria-labelledby="target-modal-title">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title-box">
+              <h3 class="modal-title" id="target-modal-title">Set Platform Targets</h3>
+              <p class="modal-subtitle">Define target problem quantities for each practice platform</p>
+            </div>
+            <button class="modal-close-btn" id="target-modal-close" aria-label="Close dialog">✕</button>
+          </div>
+          <form id="platform-targets-form">
+            <div class="form-grid" id="target-modal-inputs">
+              <!-- Dynamically populated per platform -->
+            </div>
+            <div class="modal-actions mt-4">
+              <button type="button" class="btn btn-outline" id="target-modal-cancel">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Targets</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- N8N CHATBOT NATIVE DRAWER / FALLBACK -->
+      <div class="chat-drawer-backdrop hidden" id="n8n-chat-backdrop" role="dialog" aria-modal="true" aria-labelledby="n8n-chat-title">
+        <div class="chat-drawer" id="n8n-chat-drawer">
+          <div class="chat-drawer-header">
+            <div class="chat-drawer-brand">
+              <div class="chat-avatar-icon">🤖</div>
+              <div>
+                <div class="chat-drawer-title" id="n8n-chat-title">CodeTrack AI Mentor</div>
+                <div class="chat-drawer-subtitle">Powered by n8n workflow</div>
+              </div>
+            </div>
+            <button class="chat-close-btn" id="n8n-chat-close" aria-label="Close chat">✕</button>
+          </div>
+          <div class="chat-drawer-messages" id="n8n-chat-messages">
+            <div class="chat-message bot">
+              <div class="chat-bubble">
+                Hi! 👋 I am your CodeTrack AI Practice Assistant. Ask me anything about algorithmic patterns, debugging your code, or problem-solving tips!
+              </div>
+            </div>
+          </div>
+          <form class="chat-drawer-input-row" id="n8n-chat-form">
+            <input type="text" id="n8n-chat-input" class="chat-input" placeholder="Ask a question or paste problem details..." autocomplete="off" />
+            <button type="submit" class="btn btn-primary chat-send-btn" id="n8n-chat-send" aria-label="Send message">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- TOAST NOTIFICATION CONTAINER -->
+      <div class="toast-container" id="toast-container" aria-live="polite"></div>
+    </div>
+
+    <!-- Application Script -->
+    <script type="module" src="/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "CodeTrack – Student Coding Practice Tracker",
+  "description": "A comprehensive coding practice tracker for college students to log problems, monitor streaks, track platform & topic progress, and view analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
